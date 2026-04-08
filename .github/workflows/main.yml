@@ -1,0 +1,27 @@
+name: IPTV Guncelle
+on:
+  schedule:
+    - cron: '*/20 * * * *' # Her 20 dakikada bir otomatik çalışır
+  workflow_dispatch:      # Manuel çalıştırma butonu ekler
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Python Kur
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - name: Kutuphaneleri Yukle
+        run: pip install requests
+      - name: Botu Calistir
+        run: python bot_dosyasi.py
+      - name: Guncellemeleri Kaydet
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add sinirsiz_yayin.m3u
+          git commit -m "Liste guncellendi" || echo "Degisiklik yok"
+          git push
+          
